@@ -1,22 +1,13 @@
-# Tabu Search aplicado ao problema de N rainhas
-# Bruno Augusto de Oliveira
-
-
 import time
 import random
+import matplotlib.pyplot as plt
 from collections import deque
 
-start_time = time.time()
-
-
-n = 50  # quantidade da rainhas
-max_it = 500
-tam_tabu = 8  # lista tabu
-null = None
-
+n = 50
+max_it = 100
+tam_tabu = 8  # Tamanho da lista tabu
 
 solution = random.sample(range(1, n + 1), n)
-
 
 def calc_fitness(solution):
     ataques = 0
@@ -36,7 +27,6 @@ def calc_fitness(solution):
 
     return ataques
 
-
 def gerar_vizinhos(solution):
     vizinhos = []
     n = len(solution)
@@ -48,17 +38,18 @@ def gerar_vizinhos(solution):
             vizinhos.append(vizinho)
     return vizinhos
 
-
 def busca_tabu(solution, max_int, tamanho_tabu):
     solucao_atual = solution[:]
     melhor_solucao = solution[:]
     melhor_fitness = calc_fitness(solution)
-
+    
     lista_tabu = deque(maxlen=tamanho_tabu)
+    fitness_evolucao = []
 
     for iteracao in range(max_int):
+        fitness_evolucao.append(melhor_fitness)
         vizinhos = gerar_vizinhos(solucao_atual)
-        melhor_vizinho = null
+        melhor_vizinho = None
         melhor_vizinho_fitness = float("inf")
 
         for vizinho in vizinhos:
@@ -70,7 +61,7 @@ def busca_tabu(solution, max_int, tamanho_tabu):
                     melhor_vizinho = vizinho
                     melhor_vizinho_fitness = fitness_vizinho
 
-        if melhor_vizinho is null:
+        if melhor_vizinho is None:
             continue
 
         solucao_atual = melhor_vizinho[:]
@@ -88,13 +79,20 @@ def busca_tabu(solution, max_int, tamanho_tabu):
         if melhor_fitness == 0:
             break
 
-    return melhor_fitness, melhor_solucao
+    return melhor_fitness, melhor_solucao, fitness_evolucao
 
-
-melhor_fitness, melhor_solucao = busca_tabu(solution, max_it, tam_tabu)
-
+start_time = time.time()
+melhor_fitness, melhor_solucao, fitness_evolucao = busca_tabu(solution, max_it, tam_tabu)
 execution_time = time.time() - start_time
 
 print("Melhor Solução: ", melhor_solucao)
 print("Melhor Fitness: ", melhor_fitness)
 print("Tempo de execução: ", execution_time)
+
+# Gerar gráfico da evolução do fitness
+plt.plot(fitness_evolucao, label='Fitness')
+plt.xlabel('Iterações')
+plt.ylabel('Fitness (Número de conflitos)')
+plt.title('Evolução do Fitness na Busca Tabu')
+plt.legend()
+plt.show()
