@@ -25,7 +25,8 @@ Foram realizados testes variando-se, vez a vez, cada um dos parâmetros para se 
 
 Conforme mostrado na Figura 1, os resultados indicam uma convergência do algoritmo ao longo de 5000 iterações para uma configuração sem conflitos ou com o menor número de conflitos possı́vel.
 
-<img src="../n_queen/imagem/figura1.png" alt="Figura 1">
+<img src="./imagem/figura1.png" alt="Figura 1">
+
 
 
 
